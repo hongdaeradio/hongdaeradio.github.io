@@ -335,13 +335,21 @@
       to   { transform: translateX(-50%); }
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
       .playlist-grid {
         grid-template-columns: 1fr;
       }
       .playlist-card.wide {
         grid-column: auto;
+        flex-direction: column;
+        padding: 24px;
       }
+      .wide-left {
+        padding: 0;
+        min-width: unset;
+      }
+      .wide-divider { display: none; }
+      .wide-marquee-wrap { display: none; }
     }
 
     .playlist-card {
