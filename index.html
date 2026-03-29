@@ -368,8 +368,9 @@
       border: 1px solid var(--gold);
       color: var(--gold);
       font-family: 'Courier New', monospace;
-      font-size: 11px;
-      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: bold;
+      padding: 6px 14px;
       border-radius: 100px;
       letter-spacing: 1px;
     }
@@ -377,25 +378,26 @@
     .lock-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.45);
+      background: rgba(0,0,0,0.5);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 10px;
     }
 
     .lock-icon {
-      font-size: 2rem;
-      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+      font-size: 2.8rem;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.9));
     }
 
     .lock-date {
       font-family: 'Courier New', monospace;
-      font-size: 12px;
+      font-size: 14px;
+      font-weight: bold;
       color: #fff;
-      background: rgba(0,0,0,0.6);
-      padding: 4px 12px;
+      background: rgba(0,0,0,0.7);
+      padding: 6px 16px;
       border-radius: 100px;
       letter-spacing: 1px;
     }
@@ -406,12 +408,17 @@
     .video-date { font-size: 11px; color: var(--gold); font-family: 'Courier New', monospace; margin-top: 6px; opacity: 0.8; }
 
     .sub-section-label {
+      display: inline-block;
       font-family: 'Courier New', monospace;
-      font-size: 11px;
-      letter-spacing: 3px;
-      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      margin: 36px 0 12px;
+      margin: 36px 0 14px;
+      background: var(--gold);
+      color: #0e0c0a;
+      font-weight: bold;
+      padding: 5px 14px;
+      border-radius: 4px;
     }
 
     /* ── CTA ──────────────────────────────────── */
