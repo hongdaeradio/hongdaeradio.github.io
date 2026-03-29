@@ -281,54 +281,11 @@
 
     .playlist-card.wide {
       grid-column: 1 / -1;
-      display: flex;
-      align-items: center;
-      gap: 0;
-      overflow: hidden;
-      padding: 0;
+      background: #1f1a0e;
+      border-color: var(--gold);
     }
 
-    .wide-left {
-      padding: 24px 28px;
-      min-width: 220px;
-      flex-shrink: 0;
-    }
-
-    .wide-divider {
-      width: 1px;
-      height: 80px;
-      background: var(--border);
-      flex-shrink: 0;
-    }
-
-    .wide-marquee-wrap {
-      flex: 1;
-      overflow: hidden;
-      padding: 0 8px;
-      mask-image: linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent);
-      -webkit-mask-image: linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent);
-    }
-
-    .wide-marquee {
-      display: flex;
-      gap: 32px;
-      animation: marquee 30s linear infinite;
-      white-space: nowrap;
-    }
-
-    .wide-marquee:hover { animation-play-state: paused; }
-
-    .marquee-item {
-      font-family: 'Courier New', monospace;
-      font-size: 13px;
-      color: var(--muted);
-      flex-shrink: 0;
-    }
-
-    .marquee-dot {
-      color: var(--gold);
-      margin: 0 4px;
-    }
+    .playlist-card.wide .playlist-name { color: var(--gold); }
 
     @keyframes marquee {
       from { transform: translateX(0); }
@@ -341,15 +298,7 @@
       }
       .playlist-card.wide {
         grid-column: auto;
-        flex-direction: column;
-        padding: 24px;
       }
-      .wide-left {
-        padding: 0;
-        min-width: unset;
-      }
-      .wide-divider { display: none; }
-      .wide-marquee-wrap { display: none; }
     }
 
     .playlist-card {
@@ -584,37 +533,9 @@
 
   <div class="playlist-grid">
     <a class="playlist-card wide" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR7G7UydGECeXJuFC2YFagUI" target="_blank" rel="noopener">
-      <div class="wide-left">
-        <div class="playlist-emoji">📻</div>
-        <p class="playlist-name">Full Collection</p>
-        <p class="playlist-desc">Hongdae Radio 전체 영상 모음</p>
-      </div>
-      <div class="wide-divider"></div>
-      <div class="wide-marquee-wrap">
-        <div class="wide-marquee">
-          <span class="marquee-item">☕ A warm cup of coffee</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">📖 Morning reading sessions</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">🌧️ Rainy day focus</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">🌙 Late night quiet</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">🪟 Sunlight by the window</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">✍️ Deep work & study</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">🎹 Acoustic guitar & piano</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">🌇 Golden hour evenings</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">😌 Simply doing nothing</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">📻 Broadcasting from Seoul</span><span class="marquee-dot">·</span>
-          <!-- 반복 (seamless loop) -->
-          <span class="marquee-item">☕ A warm cup of coffee</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">📖 Morning reading sessions</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">🌧️ Rainy day focus</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">🌙 Late night quiet</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">🪟 Sunlight by the window</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">✍️ Deep work & study</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">🎹 Acoustic guitar & piano</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">🌇 Golden hour evenings</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">😌 Simply doing nothing</span><span class="marquee-dot">·</span>
-          <span class="marquee-item">📻 Broadcasting from Seoul</span><span class="marquee-dot">·</span>
-        </div>
-      </div>
+      <div class="playlist-emoji">📻</div>
+      <p class="playlist-name">Full Collection</p>
+      <p class="playlist-desc">Hongdae Radio 전체 영상 모음</p>
     </a>
     <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR6JPZhXruF4M55VrKYoKc_x" target="_blank" rel="noopener">
       <div class="playlist-emoji">☀️</div>
