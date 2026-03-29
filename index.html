@@ -270,9 +270,22 @@
     /* ── PLAYLISTS ────────────────────────────── */
     .playlist-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 16px;
       margin-top: 32px;
+    }
+
+    .playlist-card.wide {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 600px) {
+      .playlist-grid {
+        grid-template-columns: 1fr;
+      }
+      .playlist-card.wide {
+        grid-column: auto;
+      }
     }
 
     .playlist-card {
@@ -435,15 +448,10 @@
   <h2>무드별로 골라 들어보세요</h2>
 
   <div class="playlist-grid">
-    <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR7G7UydGECeXJuFC2YFagUI" target="_blank" rel="noopener">
+    <a class="playlist-card wide" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR7G7UydGECeXJuFC2YFagUI" target="_blank" rel="noopener">
       <div class="playlist-emoji">📻</div>
       <p class="playlist-name">Full Collection</p>
       <p class="playlist-desc">Hongdae Radio 전체 영상 모음</p>
-    </a>
-    <a class="playlist-card" href="#" target="_blank" rel="noopener">
-      <div class="playlist-emoji">☕</div>
-      <p class="playlist-name">Cafe Hours</p>
-      <p class="playlist-desc">카페에서 보내는 모든 시간을 위한 음악</p>
     </a>
     <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR6JPZhXruF4M55VrKYoKc_x" target="_blank" rel="noopener">
       <div class="playlist-emoji">☀️</div>
