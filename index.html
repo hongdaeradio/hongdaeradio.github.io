@@ -270,7 +270,7 @@
     /* ── PLAYLISTS ────────────────────────────── */
     .playlist-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       margin-top: 32px;
     }
@@ -279,7 +279,26 @@
       grid-column: 1 / -1;
     }
 
-    @media (max-width: 600px) {
+    .playlist-card.soon {
+      opacity: 0.5;
+      cursor: default;
+      pointer-events: none;
+      border-style: dashed;
+    }
+
+    .soon-tag {
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 700px) {
       .playlist-grid {
         grid-template-columns: 1fr;
       }
@@ -524,6 +543,12 @@
       <p class="playlist-name">Rainy Mood</p>
       <p class="playlist-desc">빗소리와 어울리는 피아노 앰비언트</p>
     </a>
+    <div class="playlist-card soon">
+      <span class="soon-tag">COMING SOON</span>
+      <div class="playlist-emoji">☕</div>
+      <p class="playlist-name">Cafe Hours</p>
+      <p class="playlist-desc">카페에서 보내는 모든 시간을 위한 음악</p>
+    </div>
   </div>
 </section>
 
