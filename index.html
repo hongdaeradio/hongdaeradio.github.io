@@ -355,6 +355,32 @@
       letter-spacing: 1px;
     }
 
+    .lock-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .lock-icon {
+      font-size: 2rem;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));
+    }
+
+    .lock-date {
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: #fff;
+      background: rgba(0,0,0,0.6);
+      padding: 4px 12px;
+      border-radius: 100px;
+      letter-spacing: 1px;
+    }
+
     .video-info { padding: 16px; }
     .video-title { font-size: 14px; color: var(--text); margin-bottom: 4px; }
     .video-meta { font-size: 12px; color: var(--muted); font-family: 'Courier New', monospace; }
@@ -533,34 +559,43 @@
     <div class="video-card upcoming">
       <div class="video-thumb">
         <img src="thumb_v13.jpg" alt="Midnight Piano & Strings" />
-        <span class="upcoming-badge">📅 Apr 1</span>
+        <div class="lock-overlay">
+          <span class="lock-icon">🔒</span>
+          <span class="lock-date">Apr 1 · 08:00 AM</span>
+        </div>
       </div>
       <div class="video-info">
         <p class="video-title">Midnight Piano & Strings</p>
         <p class="video-meta">Late Night Ambient · 53min</p>
-        <p class="video-date">2026.04.01 공개 예정</p>
+        <p class="video-date">2026.04.01 오전 8시 공개</p>
       </div>
     </div>
     <div class="video-card upcoming">
       <div class="video-thumb">
         <img src="thumb_v14.jpg" alt="Golden Hour" />
-        <span class="upcoming-badge">📅 Apr 4</span>
+        <div class="lock-overlay">
+          <span class="lock-icon">🔒</span>
+          <span class="lock-date">Apr 4 · 08:00 AM</span>
+        </div>
       </div>
       <div class="video-info">
         <p class="video-title">Golden Hour</p>
         <p class="video-meta">Acoustic Guitar & Piano · 61min</p>
-        <p class="video-date">2026.04.04 공개 예정</p>
+        <p class="video-date">2026.04.04 오전 8시 공개</p>
       </div>
     </div>
     <div class="video-card upcoming">
       <div class="video-thumb">
         <img src="thumb_v15.jpg" alt="Afternoon at Hongdae Cafe" />
-        <span class="upcoming-badge">📅 Apr 7</span>
+        <div class="lock-overlay">
+          <span class="lock-icon">🔒</span>
+          <span class="lock-date">Apr 7 · 08:00 AM</span>
+        </div>
       </div>
       <div class="video-info">
         <p class="video-title">Afternoon at Hongdae Cafe</p>
         <p class="video-meta">Bossa Nova & Soft Humming · 87min</p>
-        <p class="video-date">2026.04.07 공개 예정</p>
+        <p class="video-date">2026.04.07 오전 8시 공개</p>
       </div>
     </div>
   </div>
