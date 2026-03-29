@@ -472,9 +472,10 @@
       gap: 40px;
       margin: 40px 0;
       flex-wrap: wrap;
+      align-items: flex-start;
     }
 
-    .cta-step { text-align: center; }
+    .cta-step { text-align: center; width: 100px; }
     .step-num {
       width: 48px; height: 48px;
       border: 1px solid var(--gold);
@@ -483,8 +484,9 @@
       margin: 0 auto 12px;
       color: var(--gold);
       font-family: 'Courier New', monospace;
+      line-height: 1;
     }
-    .step-label { font-size: 14px; color: var(--muted); }
+    .step-label { font-size: 14px; color: var(--muted); display: flex; align-items: center; justify-content: center; gap: 6px; }
 
     /* ── FAQ (GEO) ────────────────────────────── */
     .faq-list { margin-top: 32px; }
@@ -703,11 +705,14 @@
   <div class="cta-steps">
     <div class="cta-step">
       <div class="step-num">1</div>
-      <p class="step-label">구독</p>
+      <p class="step-label">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--gold);flex-shrink:0"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        구독
+      </p>
     </div>
     <div class="cta-step">
       <div class="step-num">2</div>
-      <p class="step-label">좋아요 👍</p>
+      <p class="step-label">👍 좋아요</p>
     </div>
     <div class="cta-step">
       <div class="step-num">3</div>
