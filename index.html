@@ -711,5 +711,70 @@
   <p style="margin-top: 8px;"><a href="https://www.youtube.com/@HongdaeRadio">YouTube</a></p>
 </footer>
 
+
+<canvas id="bokeh-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.55;"></canvas>
+
+<script>
+(function() {
+  const canvas = document.getElementById('bokeh-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const GOLD   = [212, 175, 55];
+  const CREAM  = [255, 240, 180];
+  const DGOLD  = [200, 155, 40];
+  const COLORS = [GOLD, CREAM, DGOLD];
+
+  const particles = [];
+  const COUNT = 55;
+
+  for (let i = 0; i < COUNT; i++) {
+    particles.push({
+      x:     Math.random(),
+      y:     Math.random(),
+      r:     Math.random() * 60 + 15,
+      alpha: Math.random() * 0.13 + 0.03,
+      speed: Math.random() * 0.00008 + 0.00003,
+      drift: (Math.random() - 0.5) * 0.00004,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)]
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const W = canvas.width;
+    const H = canvas.height;
+
+    particles.forEach(p => {
+      const x = p.x * W;
+      const y = p.y * H;
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, p.r);
+      const [r, g, b] = p.color;
+      grad.addColorStop(0,   `rgba(${r},${g},${b},${p.alpha})`);
+      grad.addColorStop(0.5, `rgba(${r},${g},${b},${p.alpha * 0.4})`);
+      grad.addColorStop(1,   `rgba(${r},${g},${b},0)`);
+      ctx.beginPath();
+      ctx.arc(x, y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // 서서히 위로 떠오르며 좌우로 드리프트
+      p.y -= p.speed;
+      p.x += p.drift;
+      if (p.y < -0.05) { p.y = 1.05; p.x = Math.random(); }
+      if (p.x < -0.05 || p.x > 1.05) { p.x = Math.random(); }
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
 </body>
 </html>
