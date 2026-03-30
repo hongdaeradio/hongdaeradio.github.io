@@ -772,18 +772,27 @@
       } else {
         p.curR -= p.maxR * p.growSpeed;
         if (p.curR <= 0) {
-          // 수명 끝 → 새로 생성
-          particles[i] = randomParticle(1.08);
+          // 수명 끝 → 초기화하여 무한 반복
+          const fresh = randomParticle(Math.random()); // 랜덤 위치에서 재시작
+          p.x = fresh.x; p.y = fresh.y;
+          p.r = fresh.r; p.curR = 0;
+          p.maxR = fresh.maxR; p.growing = true;
+          p.alpha = 0; p.maxAlpha = fresh.maxAlpha;
+          p.fadingIn = true;
+          p.growSpeed = fresh.growSpeed;
+          p.fadeSpeed = fresh.fadeSpeed;
+          p.speed = fresh.speed; p.drift = fresh.drift;
+          p.color = fresh.color;
           return;
         }
       }
 
-      // 밝기 애니메이션 (나타났다 사라졌다)
+      // 밝기 애니메이션 (나타났다 사라졌다 — 크기와 독립적으로)
       if (p.fadingIn) {
         p.alpha += p.maxAlpha * p.fadeSpeed;
         if (p.alpha >= p.maxAlpha) { p.alpha = p.maxAlpha; p.fadingIn = false; }
       } else {
-        p.alpha -= p.maxAlpha * p.fadeSpeed;
+        p.alpha -= p.maxAlpha * p.fadeSpeed * 0.7; // 사라질 때 더 천천히
         if (p.alpha < 0) p.alpha = 0;
       }
 
