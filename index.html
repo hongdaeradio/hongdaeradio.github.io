@@ -732,23 +732,31 @@
   const IVORY = [255, 250, 210];
   const COLORS = [GOLD, CREAM, DGOLD, IVORY, GOLD, GOLD]; // 골드 비중 높임
 
-  const COUNT = 45;
+  const COUNT = 40;
   const particles = [];
 
+  function randomParticle(randomY) {
+    const maxR = Math.random() * 90 + 30;
+    return {
+      x:         Math.random(),
+      y:         randomY !== undefined ? randomY : Math.random(),
+      r:         maxR,
+      curR:      Math.random() * maxR * 0.3,      // 현재 크기 (0에서 시작)
+      maxR:      maxR,
+      growing:   true,                             // 커지는 중 / 작아지는 중
+      growSpeed: Math.random() * 0.003 + 0.001,   // 크기 변화 속도
+      alpha:     0,
+      maxAlpha:  Math.random() * 0.30 + 0.12,
+      fadeSpeed: Math.random() * 0.003 + 0.001,   // 밝기 변화 속도
+      fadingIn:  true,
+      speed:     Math.random() * 0.00005 + 0.00001,
+      drift:     (Math.random() - 0.5) * 0.00003,
+      color:     COLORS[Math.floor(Math.random() * COLORS.length)]
+    };
+  }
+
   for (let i = 0; i < COUNT; i++) {
-    const maxAlpha = Math.random() * 0.28 + 0.10; // 더 밝게
-    particles.push({
-      x:        Math.random(),
-      y:        Math.random(),
-      r:        Math.random() * 80 + 25,           // 더 크게
-      alpha:    Math.random() * maxAlpha,
-      maxAlpha: maxAlpha,
-      phase:    Math.random() * Math.PI * 2,       // 페이드 위상
-      fadeSpeed:Math.random() * 0.012 + 0.005,     // 페이드 속도
-      speed:    Math.random() * 0.00006 + 0.00002, // 떠오르는 속도
-      drift:    (Math.random() - 0.5) * 0.00003,
-      color:    COLORS[Math.floor(Math.random() * COLORS.length)]
-    });
+    particles.push(randomParticle());
   }
 
   function draw() {
@@ -756,33 +764,50 @@
     const W = canvas.width;
     const H = canvas.height;
 
-    particles.forEach(p => {
-      // 페이드 인/아웃 (sin 파형)
-      p.phase += p.fadeSpeed;
-      p.alpha = p.maxAlpha * (0.5 + 0.5 * Math.sin(p.phase));
+    particles.forEach((p, i) => {
+      // 크기 애니메이션 (커졌다 작아졌다)
+      if (p.growing) {
+        p.curR += p.maxR * p.growSpeed;
+        if (p.curR >= p.maxR) { p.curR = p.maxR; p.growing = false; }
+      } else {
+        p.curR -= p.maxR * p.growSpeed;
+        if (p.curR <= 0) {
+          // 수명 끝 → 새로 생성
+          particles[i] = randomParticle(1.08);
+          return;
+        }
+      }
+
+      // 밝기 애니메이션 (나타났다 사라졌다)
+      if (p.fadingIn) {
+        p.alpha += p.maxAlpha * p.fadeSpeed;
+        if (p.alpha >= p.maxAlpha) { p.alpha = p.maxAlpha; p.fadingIn = false; }
+      } else {
+        p.alpha -= p.maxAlpha * p.fadeSpeed;
+        if (p.alpha < 0) p.alpha = 0;
+      }
 
       const x = p.x * W;
       const y = p.y * H;
+      const r = p.curR;
 
-      const grad = ctx.createRadialGradient(x, y, p.r * 0.1, x, y, p.r);
-      const [r, g, b] = p.color;
-      grad.addColorStop(0,    `rgba(${r},${g},${b},${p.alpha})`);
-      grad.addColorStop(0.3,  `rgba(${r},${g},${b},${(p.alpha * 0.6).toFixed(3)})`);
-      grad.addColorStop(0.7,  `rgba(${r},${g},${b},${(p.alpha * 0.15).toFixed(3)})`);
-      grad.addColorStop(1,    `rgba(${r},${g},${b},0)`);
+      const grad = ctx.createRadialGradient(x, y, r * 0.05, x, y, r);
+      const [cr, cg, cb] = p.color;
+      grad.addColorStop(0,   `rgba(${cr},${cg},${cb},${p.alpha.toFixed(3)})`);
+      grad.addColorStop(0.35,`rgba(${cr},${cg},${cb},${(p.alpha * 0.55).toFixed(3)})`);
+      grad.addColorStop(0.7, `rgba(${cr},${cg},${cb},${(p.alpha * 0.12).toFixed(3)})`);
+      grad.addColorStop(1,   `rgba(${cr},${cg},${cb},0)`);
 
-      ctx.globalCompositeOperation = 'lighter'; // 발광 효과
+      ctx.globalCompositeOperation = 'lighter';
       ctx.beginPath();
-      ctx.arc(x, y, p.r, 0, Math.PI * 2);
+      ctx.arc(x, y, r, 0, Math.PI * 2);
       ctx.fillStyle = grad;
       ctx.fill();
       ctx.globalCompositeOperation = 'source-over';
 
-      // 위로 떠오르며 드리프트
+      // 위로 천천히 이동
       p.y -= p.speed;
       p.x += p.drift;
-      if (p.y < -0.08) { p.y = 1.08; p.x = Math.random(); p.phase = Math.random() * Math.PI * 2; }
-      if (p.x < -0.08 || p.x > 1.08) { p.x = Math.random(); }
     });
 
     requestAnimationFrame(draw);
