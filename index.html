@@ -764,16 +764,19 @@
       const x = p.x * W;
       const y = p.y * H;
 
-      const grad = ctx.createRadialGradient(x, y, 0, x, y, p.r);
+      const grad = ctx.createRadialGradient(x, y, p.r * 0.1, x, y, p.r);
       const [r, g, b] = p.color;
       grad.addColorStop(0,    `rgba(${r},${g},${b},${p.alpha})`);
-      grad.addColorStop(0.45, `rgba(${r},${g},${b},${(p.alpha * 0.5).toFixed(3)})`);
+      grad.addColorStop(0.3,  `rgba(${r},${g},${b},${(p.alpha * 0.6).toFixed(3)})`);
+      grad.addColorStop(0.7,  `rgba(${r},${g},${b},${(p.alpha * 0.15).toFixed(3)})`);
       grad.addColorStop(1,    `rgba(${r},${g},${b},0)`);
 
+      ctx.globalCompositeOperation = 'lighter'; // 발광 효과
       ctx.beginPath();
       ctx.arc(x, y, p.r, 0, Math.PI * 2);
       ctx.fillStyle = grad;
       ctx.fill();
+      ctx.globalCompositeOperation = 'source-over';
 
       // 위로 떠오르며 드리프트
       p.y -= p.speed;
