@@ -563,7 +563,7 @@
 
   <p class="sub-section-label">▸ 공개됨</p>
   <div class="video-grid">
-    <a class="video-card" href="https://youtu.be/kFlNEhrs3Hg" target="_blank" rel="noopener">
+    <a class="video-card" href="https://youtu.be/kFlNEhrs3Hg" data-ytid="kFlNEhrs3Hg" target="_blank" rel="noopener">
       <div class="video-thumb"><img src="thumb_v13.jpg" alt="Midnight Piano & Strings" /></div>
       <div class="video-info">
         <p class="video-title">Midnight Piano & Strings</p>
@@ -571,7 +571,7 @@
         <p class="video-date">2026.04.01</p>
       </div>
     </a>
-    <a class="video-card" href="https://youtu.be/GX32KRCPf8I" target="_blank" rel="noopener">
+    <a class="video-card" href="https://youtu.be/GX32KRCPf8I" data-ytid="GX32KRCPf8I" target="_blank" rel="noopener">
       <div class="video-thumb"><img src="thumb_v12.jpg" alt="Rainy Day Piano" /></div>
       <div class="video-info">
         <p class="video-title">Rainy Day Piano</p>
@@ -579,7 +579,7 @@
         <p class="video-date">2026.03.29</p>
       </div>
     </a>
-    <a class="video-card" href="https://youtu.be/BoghrxDJK18" target="_blank" rel="noopener">
+    <a class="video-card" href="https://youtu.be/BoghrxDJK18" data-ytid="BoghrxDJK18" target="_blank" rel="noopener">
       <div class="video-thumb"><img src="thumb_v11.jpg" alt="A Morning for Reading" /></div>
       <div class="video-info">
         <p class="video-title">A Morning for Reading</p>
@@ -799,6 +799,30 @@
     requestAnimationFrame(draw);
   }
   draw();
+})();
+</script>
+<script>
+// 모바일에서 유튜브 앱으로 직접 오픈, PC는 웹으로 그대로
+(function() {
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  if (!isMobile) return; // PC는 기존 href 그대로 사용
+
+  document.querySelectorAll('a[data-ytid]').forEach(function(a) {
+    var ytid = a.getAttribute('data-ytid');
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      // 유튜브 앱 딥링크 시도 → 앱 없으면 웹으로 폴백
+      var appUrl = 'youtube://watch?v=' + ytid;
+      var webUrl = 'https://www.youtube.com/watch?v=' + ytid;
+      var fallback = setTimeout(function() {
+        window.location.href = webUrl;
+      }, 1200);
+      window.location.href = appUrl;
+      window.addEventListener('blur', function() {
+        clearTimeout(fallback); // 앱으로 넘어갔으면 폴백 취소
+      }, { once: true });
+    });
+  });
 })();
 </script>
 </body>
