@@ -530,22 +530,22 @@
   <h2>무드별로 골라 들어보세요</h2>
 
   <div class="playlist-grid">
-    <a class="playlist-card wide" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR7G7UydGECeXJuFC2YFagUI" target="_blank" rel="noopener">
+    <a class="playlist-card wide" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR7G7UydGECeXJuFC2YFagUI" data-ytlist="PLBIn_rMVsvR7G7UydGECeXJuFC2YFagUI" target="_blank" rel="noopener">
       <div class="playlist-emoji">📻</div>
       <p class="playlist-name">Full Collection</p>
       <p class="playlist-desc">Hongdae Radio 전체 영상 모음</p>
     </a>
-    <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR6JPZhXruF4M55VrKYoKc_x" target="_blank" rel="noopener">
+    <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR6JPZhXruF4M55VrKYoKc_x" data-ytlist="PLBIn_rMVsvR6JPZhXruF4M55VrKYoKc_x" target="_blank" rel="noopener">
       <div class="playlist-emoji">☀️</div>
       <p class="playlist-name">Morning Ambient</p>
       <p class="playlist-desc">아침을 여는 잔잔한 앰비언트 음악</p>
     </a>
-    <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR4pN3XCMEh7EWu6qWtoe7Zh" target="_blank" rel="noopener">
+    <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR4pN3XCMEh7EWu6qWtoe7Zh" data-ytlist="PLBIn_rMVsvR4pN3XCMEh7EWu6qWtoe7Zh" target="_blank" rel="noopener">
       <div class="playlist-emoji">🌧️</div>
       <p class="playlist-name">Rainy Mood</p>
       <p class="playlist-desc">빗소리와 어울리는 피아노 앰비언트</p>
     </a>
-    <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR5d02QlyJtB6RFpAgjy-UaR" target="_blank" rel="noopener">
+    <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR5d02QlyJtB6RFpAgjy-UaR" data-ytlist="PLBIn_rMVsvR5d02QlyJtB6RFpAgjy-UaR" target="_blank" rel="noopener">
       <div class="playlist-emoji">🌙</div>
       <p class="playlist-name">Late Night Lo-fi</p>
       <p class="playlist-desc">깊은 밤을 위한 피아노 앰비언트</p>
@@ -807,20 +807,31 @@
   var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
   if (!isMobile) return; // PC는 기존 href 그대로 사용
 
+  function openYoutube(appUrl, webUrl) {
+    var fallback = setTimeout(function() {
+      window.location.href = webUrl;
+    }, 1200);
+    window.location.href = appUrl;
+    window.addEventListener('blur', function() {
+      clearTimeout(fallback);
+    }, { once: true });
+  }
+
+  // 영상 카드
   document.querySelectorAll('a[data-ytid]').forEach(function(a) {
     var ytid = a.getAttribute('data-ytid');
     a.addEventListener('click', function(e) {
       e.preventDefault();
-      // 유튜브 앱 딥링크 시도 → 앱 없으면 웹으로 폴백
-      var appUrl = 'youtube://watch?v=' + ytid;
-      var webUrl = 'https://www.youtube.com/watch?v=' + ytid;
-      var fallback = setTimeout(function() {
-        window.location.href = webUrl;
-      }, 1200);
-      window.location.href = appUrl;
-      window.addEventListener('blur', function() {
-        clearTimeout(fallback); // 앱으로 넘어갔으면 폴백 취소
-      }, { once: true });
+      openYoutube('youtube://watch?v=' + ytid, 'https://www.youtube.com/watch?v=' + ytid);
+    });
+  });
+
+  // 플레이리스트 카드
+  document.querySelectorAll('a[data-ytlist]').forEach(function(a) {
+    var listid = a.getAttribute('data-ytlist');
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      openYoutube('youtube://playlist?list=' + listid, 'https://www.youtube.com/playlist?list=' + listid);
     });
   });
 })();
