@@ -281,8 +281,9 @@
     }
 
     .playlist-card.wide {
-      background: #1f1a0e;
+      background: linear-gradient(135deg, #2a2008 0%, #1f1a0e 60%, #2e2210 100%);
       border-color: var(--gold);
+      box-shadow: inset 0 0 40px rgba(212,175,55,0.08);
     }
 
     .playlist-card.wide .playlist-name { color: var(--gold); }
@@ -727,15 +728,16 @@
   const IVORY = [255, 250, 210];
   const COLORS = [GOLD, CREAM, DGOLD, IVORY, GOLD, GOLD]; // 골드 비중 높임
 
-  const COUNT = 40;
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) || window.innerWidth < 700;
+  const COUNT = isMobile ? 18 : 40;
   const particles = [];
 
   function newParticle(startOffset) {
     return {
       x:       Math.random(),
       y:       Math.random(),
-      maxR:    Math.random() * 90 + 30,
-      maxA:    Math.random() * 0.28 + 0.12,
+      maxR:    isMobile ? Math.random() * 50 + 20 : Math.random() * 90 + 30,
+      maxA:    isMobile ? Math.random() * 0.20 + 0.10 : Math.random() * 0.28 + 0.12,
       t:       startOffset !== undefined ? startOffset : Math.random(), // 0~1 lifecycle
       speed:   Math.random() * 0.0008 + 0.0003,  // lifecycle 진행 속도
       dy:      Math.random() * 0.00004 + 0.00001, // 위로 이동
