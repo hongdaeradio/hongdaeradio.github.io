@@ -552,6 +552,11 @@
       <p class="playlist-name">Late Night Lo-fi</p>
       <p class="playlist-desc">깊은 밤을 위한 피아노 앰비언트</p>
     </a>
+    <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR5OhKJK6sf9o11kMhesyGwb" data-ytlist="PLBIn_rMVsvR5OhKJK6sf9o11kMhesyGwb" target="_blank" rel="noopener">
+      <div class="playlist-emoji">🌇</div>
+      <p class="playlist-name">Golden Hour</p>
+      <p class="playlist-desc">노을빛 황금 시간대의 앰비언트</p>
+    </a>
 
   </div>
 </section>
@@ -627,6 +632,20 @@
         <p class="video-title">Quiet Stacks — The Reading Room</p>
         <p class="video-meta">Piano & Strings for Focus · 150min</p>
         <p class="video-date">2026.04.10 오전 8시 공개</p>
+      </div>
+    </div>
+    <div class="video-card upcoming">
+      <div class="video-thumb">
+        <img src="thumbnail_v17_E.jpg" alt="Haeundae Beach Waves" />
+        <div class="lock-overlay">
+          <span class="lock-icon">🔒</span>
+          <span class="lock-date">Apr 13 · 08:00 AM</span>
+        </div>
+      </div>
+      <div class="video-info">
+        <p class="video-title">Haeundae Beach Waves</p>
+        <p class="video-meta">Coastal Ambient · 64min</p>
+        <p class="video-date">2026.04.13 오전 8시 공개</p>
       </div>
     </div>
   </div>
@@ -835,6 +854,29 @@
     a.addEventListener('click', function(e) {
       e.preventDefault();
       openYoutube('youtube://playlist?list=' + listid, 'https://www.youtube.com/playlist?list=' + listid);
+    });
+  });
+})();
+</script>
+<script>
+// 플레이리스트 랜덤 순환 (Full Collection 제외)
+(function() {
+  const RANDOM_PLAYLISTS = [
+    { name: "Morning Ambient",  url: "https://www.youtube.com/playlist?list=PLBIn_rMVsvR6JPZhXruF4M55VrKYoKc_x" },
+    { name: "Rainy Mood",       url: "https://www.youtube.com/playlist?list=PLBIn_rMVsvR4pN3XCMEh7EWu6qWtoe7Zh" },
+    { name: "Late Night Lo-fi", url: "https://www.youtube.com/playlist?list=PLBIn_rMVsvR5d02QlyJtB6RFpAgjy-UaR" },
+    { name: "Golden Hour",      url: "https://www.youtube.com/playlist?list=PLBIn_rMVsvR5OhKJK6sf9o11kMhesyGwb" },
+  ];
+  let lastIdx = -1;
+
+  document.querySelectorAll('.playlist-card:not(.wide)').forEach(function(card) {
+    card.addEventListener('click', function(e) {
+      e.preventDefault();
+      let idx;
+      do { idx = Math.floor(Math.random() * RANDOM_PLAYLISTS.length); }
+      while (idx === lastIdx && RANDOM_PLAYLISTS.length > 1);
+      lastIdx = idx;
+      window.open(RANDOM_PLAYLISTS[idx].url, '_blank', 'noopener');
     });
   });
 })();
