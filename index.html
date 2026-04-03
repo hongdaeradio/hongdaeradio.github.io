@@ -532,32 +532,13 @@
   <h2>무드별로 골라 들어보세요</h2>
 
   <div class="playlist-grid">
-    <a class="playlist-card wide" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR7G7UydGECeXJuFC2YFagUI" data-ytlist="PLBIn_rMVsvR7G7UydGECeXJuFC2YFagUI" target="_blank" rel="noopener">
+    <a class="playlist-card wide" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR7G7UydGECeXJuFC2YFagUI" target="_blank" rel="noopener">
       <div class="playlist-emoji">📻</div>
       <p class="playlist-name">Full Collection</p>
       <p class="playlist-desc">Hongdae Radio 전체 영상 모음</p>
     </a>
-    <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR6JPZhXruF4M55VrKYoKc_x" data-ytlist="PLBIn_rMVsvR6JPZhXruF4M55VrKYoKc_x" target="_blank" rel="noopener">
-      <div class="playlist-emoji">☀️</div>
-      <p class="playlist-name">Morning Ambient</p>
-      <p class="playlist-desc">아침을 여는 잔잔한 앰비언트 음악</p>
-    </a>
-    <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR4pN3XCMEh7EWu6qWtoe7Zh" data-ytlist="PLBIn_rMVsvR4pN3XCMEh7EWu6qWtoe7Zh" target="_blank" rel="noopener">
-      <div class="playlist-emoji">🌧️</div>
-      <p class="playlist-name">Rainy Mood</p>
-      <p class="playlist-desc">빗소리와 어울리는 피아노 앰비언트</p>
-    </a>
-    <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR5d02QlyJtB6RFpAgjy-UaR" data-ytlist="PLBIn_rMVsvR5d02QlyJtB6RFpAgjy-UaR" target="_blank" rel="noopener">
-      <div class="playlist-emoji">🌙</div>
-      <p class="playlist-name">Late Night Lo-fi</p>
-      <p class="playlist-desc">깊은 밤을 위한 피아노 앰비언트</p>
-    </a>
-    <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR5OhKJK6sf9o11kMhesyGwb" data-ytlist="PLBIn_rMVsvR5OhKJK6sf9o11kMhesyGwb" target="_blank" rel="noopener">
-      <div class="playlist-emoji">🌇</div>
-      <p class="playlist-name">Golden Hour</p>
-      <p class="playlist-desc">노을빛 황금 시간대의 앰비언트</p>
-    </a>
-
+    <!-- 랜덤 3개 자동 삽입 -->
+    <div id="random-playlists"></div>
   </div>
 </section>
 
@@ -859,25 +840,34 @@
 })();
 </script>
 <script>
-// 플레이리스트 랜덤 순환 (Full Collection 제외)
-(function() {
-  const RANDOM_PLAYLISTS = [
-    { name: "Morning Ambient",  url: "https://www.youtube.com/playlist?list=PLBIn_rMVsvR6JPZhXruF4M55VrKYoKc_x" },
-    { name: "Rainy Mood",       url: "https://www.youtube.com/playlist?list=PLBIn_rMVsvR4pN3XCMEh7EWu6qWtoe7Zh" },
-    { name: "Late Night Lo-fi", url: "https://www.youtube.com/playlist?list=PLBIn_rMVsvR5d02QlyJtB6RFpAgjy-UaR" },
-    { name: "Golden Hour",      url: "https://www.youtube.com/playlist?list=PLBIn_rMVsvR5OhKJK6sf9o11kMhesyGwb" },
-  ];
-  let lastIdx = -1;
+// 재생목록 풀 — 신규 추가 시 여기에만 추가하면 됨
+const ALL_PLAYLISTS = [
+  { emoji: "☀️", name: "Morning Ambient",  desc: "아침을 여는 잔잔한 앰비언트 음악", url: "https://www.youtube.com/playlist?list=PLBIn_rMVsvR6JPZhXruF4M55VrKYoKc_x" },
+  { emoji: "🌧️", name: "Rainy Mood",       desc: "빗소리와 어울리는 피아노 앰비언트",  url: "https://www.youtube.com/playlist?list=PLBIn_rMVsvR4pN3XCMEh7EWu6qWtoe7Zh" },
+  { emoji: "🌙", name: "Late Night Lo-fi", desc: "깊은 밤을 위한 피아노 앰비언트",     url: "https://www.youtube.com/playlist?list=PLBIn_rMVsvR5d02QlyJtB6RFpAgjy-UaR" },
+  { emoji: "🌇", name: "Golden Hour",      desc: "노을빛 황금 시간대의 앰비언트",      url: "https://www.youtube.com/playlist?list=PLBIn_rMVsvR5OhKJK6sf9o11kMhesyGwb" },
+];
 
-  document.querySelectorAll('.playlist-card:not(.wide)').forEach(function(card) {
-    card.addEventListener('click', function(e) {
-      e.preventDefault();
-      let idx;
-      do { idx = Math.floor(Math.random() * RANDOM_PLAYLISTS.length); }
-      while (idx === lastIdx && RANDOM_PLAYLISTS.length > 1);
-      lastIdx = idx;
-      window.open(RANDOM_PLAYLISTS[idx].url, '_blank', 'noopener');
-    });
+(function() {
+  const SHOW = 3;
+  const pool = ALL_PLAYLISTS.slice();
+  // Fisher-Yates shuffle
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  const selected = pool.slice(0, SHOW);
+  const container = document.getElementById('random-playlists');
+  selected.forEach(function(p) {
+    const a = document.createElement('a');
+    a.className = 'playlist-card';
+    a.href = p.url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.innerHTML = '<div class="playlist-emoji">' + p.emoji + '</div>' +
+                  '<p class="playlist-name">' + p.name + '</p>' +
+                  '<p class="playlist-desc">' + p.desc + '</p>';
+    container.appendChild(a);
   });
 })();
 </script>
