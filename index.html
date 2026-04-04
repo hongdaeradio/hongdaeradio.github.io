@@ -543,10 +543,11 @@
 <!-- ── PLAYLISTS ──────────────────────────────────── -->
 <section>
   <p class="section-label">Playlists</p>
-  <h2>무드별로 골라 들어보세요</h2>
+  <h2>무드별로 골라 들어보세요 <span id="shuffle-btn" style="cursor:pointer;font-size:0.7em;opacity:0.7;transition:transform 0.4s;" title="셔플">🎲</span></h2>
 
   <div class="playlist-grid">
-    <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR7G7UydGECeXJuFC2YFagUI" target="_blank" rel="noopener" style="border-color:var(--gold);">
+    <a class="playlist-card" href="https://www.youtube.com/playlist?list=PLBIn_rMVsvR7G7UydGECeXJuFC2YFagUI" target="_blank" rel="noopener" style="border-color:var(--gold);position:relative;">
+      <span style="position:absolute;top:12px;right:14px;font-size:1.1rem;opacity:0.7;">📌</span>
       <div class="playlist-emoji">📻</div>
       <p class="playlist-name" style="color:var(--gold);">Full Collection</p>
       <p class="playlist-desc">Hongdae Radio 전체 영상 모음</p>
@@ -862,16 +863,18 @@ const ALL_PLAYLISTS = [
   { emoji: "🌇", name: "Golden Hour",      desc: "노을빛 황금 시간대의 앰비언트",      url: "https://www.youtube.com/playlist?list=PLBIn_rMVsvR5OhKJK6sf9o11kMhesyGwb" },
 ];
 
-(function() {
+function shufflePlaylists() {
   const SHOW = 3;
   const pool = ALL_PLAYLISTS.slice();
-  // Fisher-Yates shuffle
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]];
   }
   const selected = pool.slice(0, SHOW);
   const container = document.getElementById('random-playlists');
+  // 기존 카드 제거
+  while (container.firstChild) container.removeChild(container.firstChild);
+  // 새 카드 생성
   selected.forEach(function(p) {
     const a = document.createElement('a');
     a.className = 'playlist-card';
@@ -883,7 +886,18 @@ const ALL_PLAYLISTS = [
                   '<p class="playlist-desc">' + p.desc + '</p>';
     container.appendChild(a);
   });
-})();
+}
+
+// 페이지 로드 시 셔플
+shufflePlaylists();
+
+// 🎲 클릭 시 셔플
+document.getElementById('shuffle-btn').addEventListener('click', function(e) {
+  e.preventDefault();
+  // 회전 애니메이션
+  this.style.transform = 'rotate(' + (360 * (Math.random() + 1)) + 'deg)';
+  setTimeout(function() { shufflePlaylists(); }, 200);
+});
 </script>
 </body>
 </html>
