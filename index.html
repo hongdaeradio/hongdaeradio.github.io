@@ -487,12 +487,11 @@
       align-items: center;
       gap: 14px;
       box-shadow: 0 8px 32px rgba(212,168,67,0.5), 0 2px 8px rgba(0,0,0,0.4);
-      width: 360px;
-      max-width: 90vw;
+      width: min(360px, 90vw);
       transition: opacity 0.3s ease, box-shadow 0.2s ease;
     }
     .mini-player:hover { box-shadow: 0 12px 40px rgba(212,168,67,0.65), 0 2px 8px rgba(0,0,0,0.4); }
-    .player-track-info { flex: 0 0 120px; width: 120px; min-width: 0; overflow: hidden; }
+    .player-track-info { flex: 1 1 80px; min-width: 0; overflow: hidden; }
     .player-track-name {
       font-size: 12px;
       font-weight: 700;
@@ -541,6 +540,10 @@
       width: 60px;
       accent-color: #0e0c0a;
       cursor: pointer;
+    }
+    @media (max-width: 400px) {
+      .player-vol { display: none; }
+      .player-select { max-width: 70px; }
     }
     .player-eq {
       display: flex; align-items: flex-end; gap: 2px; height: 16px;
