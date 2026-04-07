@@ -487,12 +487,12 @@
       align-items: center;
       gap: 14px;
       box-shadow: 0 8px 32px rgba(212,168,67,0.5), 0 2px 8px rgba(0,0,0,0.4);
-      min-width: 320px;
+      width: 360px;
       max-width: 90vw;
       transition: opacity 0.3s ease, box-shadow 0.2s ease;
     }
     .mini-player:hover { box-shadow: 0 12px 40px rgba(212,168,67,0.65), 0 2px 8px rgba(0,0,0,0.4); }
-    .player-track-info { flex: 1; min-width: 0; }
+    .player-track-info { flex: 0 0 120px; width: 120px; min-width: 0; overflow: hidden; }
     .player-track-name {
       font-size: 12px;
       font-weight: 700;
@@ -506,6 +506,9 @@
       color: rgba(14,12,10,0.6);
       font-family: 'Courier New', monospace;
       margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .player-btn {
       width: 36px; height: 36px;
@@ -561,7 +564,7 @@
     /* ── FOOTER ───────────────────────────────── */
     footer {
       text-align: center;
-      padding: 48px 24px;
+      padding: 48px 24px 120px;
       font-family: 'Courier New', monospace;
       font-size: 12px;
       color: var(--muted);
@@ -810,7 +813,7 @@
   </div>
   <div class="player-track-info">
     <div class="player-track-name" id="trackName">Hongdae Coffee Shop</div>
-    <div class="player-track-sub" id="trackSub">Afternoon at Hongdae Cafe · V15</div>
+    <div class="player-track-sub" id="trackSub">Afternoon at Hongdae Cafe</div>
   </div>
   <select class="player-select" id="trackSelect" onchange="changeTrack(this.value)">
     <option value="0">☕ Cafe</option>
@@ -952,9 +955,9 @@
 <script>
 // ── MINI PLAYER ──────────────────────────────
 const tracks = [
-  { file: 'audio/loop-cafe.mp3',    name: 'Hongdae Coffee Shop',    sub: 'Afternoon at Hongdae Cafe · V15' },
-  { file: 'audio/loop-reading.mp3', name: 'Sanctuary in Sunlight',  sub: 'Quiet Stacks — The Reading Room · V16' },
-  { file: 'audio/loop-beach.mp3',   name: 'Golden Hour Keepsake',   sub: 'Haeundae Beach · V17' },
+  { file: 'audio/loop-cafe.mp3',    name: 'Hongdae Coffee Shop',    sub: 'Afternoon at Hongdae Cafe' },
+  { file: 'audio/loop-reading.mp3', name: 'Sanctuary in Sunlight',  sub: 'Quiet Stacks — The Reading Room' },
+  { file: 'audio/loop-beach.mp3',   name: 'Golden Hour Keepsake',   sub: 'Haeundae Beach' },
 ];
 let audio = new Audio();
 audio.loop = true;
