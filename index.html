@@ -472,6 +472,91 @@
     .faq-a-kr { font-size: 14px; color: var(--text); margin-bottom: 4px; }
     .faq-a-en { font-size: 13px; color: var(--muted); font-style: italic; }
 
+    /* ── MINI PLAYER ─────────────────────────── */
+    .mini-player {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      background: rgba(14,12,10,0.92);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      min-width: 320px;
+      max-width: 90vw;
+      transition: opacity 0.3s ease;
+    }
+    .mini-player:hover { border-color: rgba(212,168,67,0.4); }
+    .player-track-info { flex: 1; min-width: 0; }
+    .player-track-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .player-track-sub {
+      font-size: 10px;
+      color: var(--muted);
+      font-family: 'Courier New', monospace;
+      margin-top: 2px;
+    }
+    .player-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: none;
+      color: var(--gold);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .player-btn:hover { background: rgba(212,168,67,0.15); border-color: var(--gold); }
+    .player-btn.play-pause { width: 40px; height: 40px; font-size: 16px; background: rgba(212,168,67,0.1); }
+    .player-select {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 11px;
+      font-family: 'Courier New', monospace;
+      cursor: pointer;
+      outline: none;
+      max-width: 90px;
+    }
+    .player-select option { background: #1a1712; color: var(--text); }
+    .player-vol {
+      width: 60px;
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+    .player-eq {
+      display: flex; align-items: flex-end; gap: 2px; height: 16px;
+    }
+    .player-eq span {
+      width: 3px; background: var(--gold); border-radius: 2px;
+      animation: eq 0.8s ease-in-out infinite alternate;
+      opacity: 0.7;
+    }
+    .player-eq span:nth-child(1) { height: 6px; animation-delay: 0s; }
+    .player-eq span:nth-child(2) { height: 12px; animation-delay: 0.2s; }
+    .player-eq span:nth-child(3) { height: 8px; animation-delay: 0.4s; }
+    .player-eq span:nth-child(4) { height: 14px; animation-delay: 0.1s; }
+    .player-eq span:nth-child(5) { height: 5px; animation-delay: 0.3s; }
+    .player-eq.paused span { animation-play-state: paused; opacity: 0.3; }
+    @keyframes eq {
+      from { transform: scaleY(0.4); }
+      to   { transform: scaleY(1); }
+    }
+
     /* ── FOOTER ───────────────────────────────── */
     footer {
       text-align: center;
@@ -704,6 +789,24 @@
 </footer>
 
 
+<!-- MINI PLAYER -->
+<div class="mini-player" id="miniPlayer">
+  <div class="player-eq paused" id="playerEq">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <div class="player-track-info">
+    <div class="player-track-name" id="trackName">Hongdae Coffee Shop</div>
+    <div class="player-track-sub" id="trackSub">Afternoon at Hongdae Cafe · V15</div>
+  </div>
+  <select class="player-select" id="trackSelect" onchange="changeTrack(this.value)">
+    <option value="0">☕ Cafe</option>
+    <option value="1">📖 Reading</option>
+    <option value="2">🌊 Beach</option>
+  </select>
+  <input type="range" class="player-vol" id="volSlider" min="0" max="1" step="0.05" value="0.5" oninput="setVol(this.value)" title="Volume">
+  <button class="player-btn play-pause" id="playBtn" onclick="togglePlay()">▶</button>
+</div>
+
 <canvas id="bokeh-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
 
 <script>
@@ -833,6 +936,50 @@
 })();
 </script>
 <script>
+// ── MINI PLAYER ──────────────────────────────
+const tracks = [
+  { file: 'audio/loop-cafe.mp3',    name: 'Hongdae Coffee Shop',    sub: 'Afternoon at Hongdae Cafe · V15' },
+  { file: 'audio/loop-reading.mp3', name: 'Sanctuary in Sunlight',  sub: 'Quiet Stacks — The Reading Room · V16' },
+  { file: 'audio/loop-beach.mp3',   name: 'Golden Hour Keepsake',   sub: 'Haeundae Beach · V17' },
+];
+let audio = new Audio();
+audio.loop = true;
+audio.volume = 0.5;
+let currentTrack = 0;
+let isPlaying = false;
+
+function loadTrack(idx) {
+  currentTrack = idx;
+  audio.src = tracks[idx].file;
+  document.getElementById('trackName').textContent = tracks[idx].name;
+  document.getElementById('trackSub').textContent  = tracks[idx].sub;
+  document.getElementById('trackSelect').value = idx;
+}
+
+function togglePlay() {
+  if (isPlaying) {
+    audio.pause();
+    isPlaying = false;
+    document.getElementById('playBtn').textContent = '▶';
+    document.getElementById('playerEq').classList.add('paused');
+  } else {
+    audio.play();
+    isPlaying = true;
+    document.getElementById('playBtn').textContent = '⏸';
+    document.getElementById('playerEq').classList.remove('paused');
+  }
+}
+
+function changeTrack(idx) {
+  loadTrack(parseInt(idx));
+  if (isPlaying) audio.play();
+}
+
+function setVol(v) { audio.volume = v; }
+
+loadTrack(0);
+// ─────────────────────────────────────────────
+
 // 재생목록 풀 — 신규 추가 시 여기에만 추가하면 됨
 const ALL_PLAYLISTS = [
   { emoji: "☀️", name: "Morning Ambient",  desc: "아침을 여는 잔잔한 앰비언트 음악", url: "https://www.youtube.com/playlist?list=PLBIn_rMVsvR6JPZhXruF4M55VrKYoKc_x" },
