@@ -823,29 +823,26 @@
 
 
 <!-- MINI PLAYER -->
-<div class="mini-player" id="miniPlayer" style="flex-direction:column;align-items:stretch;padding:10px 18px;border-radius:20px;gap:6px;">
-  <!-- 1행: 드롭다운 + 볼륨 + 재생 -->
-  <div style="display:flex;align-items:center;gap:10px;">
-    <div class="player-eq paused" id="playerEq" style="flex-shrink:0;">
-      <span></span><span></span><span></span><span></span><span></span>
-    </div>
-    <select class="player-select" id="trackSelect" onchange="changeTrack(this.value)" style="flex:1;max-width:none;">
+<div class="mini-player" id="miniPlayer">
+  <div class="player-eq paused" id="playerEq">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <div class="player-track-info">
+    <div class="player-track-name" id="trackName">Hongdae Radio</div>
+    <div class="player-track-sub" id="trackSub">Official Signature</div>
+  </div>
+  <!-- 드롭다운 + 타이머 묶음 -->
+  <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+    <select class="player-select" id="trackSelect" onchange="changeTrack(this.value)">
       <option value="0">✨ Signature</option>
       <option value="1">☕ Cafe</option>
       <option value="2">📖 Reading</option>
       <option value="3">🌊 Beach</option>
     </select>
-    <input type="range" class="player-vol" id="volSlider" min="0" max="1" step="0.05" value="0.5" oninput="setVol(this.value)" title="Volume">
-    <button class="player-btn play-pause" id="playBtn" onclick="togglePlay()">▶</button>
+    <div id="trackTimer" style="font-family:'Courier New',monospace;font-size:11px;font-weight:bold;color:#0e0c0a;letter-spacing:1px;">--:--</div>
   </div>
-  <!-- 2행: 곡명 + 카운트다운 타이머 -->
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 2px;">
-    <div style="overflow:hidden;">
-      <div class="player-track-name" id="trackName" style="font-size:12px;">Hongdae Radio</div>
-      <div class="player-track-sub" id="trackSub" style="font-size:11px;">Official Signature</div>
-    </div>
-    <div id="trackTimer" style="font-family:'Courier New',monospace;font-size:14px;font-weight:bold;color:#0e0c0a;letter-spacing:1px;flex-shrink:0;margin-left:10px;">--:--</div>
-  </div>
+  <input type="range" class="player-vol" id="volSlider" min="0" max="1" step="0.05" value="0.5" oninput="setVol(this.value)" title="Volume">
+  <button class="player-btn play-pause" id="playBtn" onclick="togglePlay()">▶</button>
 </div>
 
 <canvas id="bokeh-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
