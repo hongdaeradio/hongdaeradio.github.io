@@ -832,9 +832,10 @@
     <div class="player-track-sub" id="trackSub">Afternoon at Hongdae Cafe</div>
   </div>
   <select class="player-select" id="trackSelect" onchange="changeTrack(this.value)">
-    <option value="0">☕ Cafe</option>
-    <option value="1">📖 Reading</option>
-    <option value="2">🌊 Beach</option>
+    <option value="0">✨ Signature</option>
+    <option value="1">☕ Cafe</option>
+    <option value="2">📖 Reading</option>
+    <option value="3">🌊 Beach</option>
   </select>
   <input type="range" class="player-vol" id="volSlider" min="0" max="1" step="0.05" value="0.5" oninput="setVol(this.value)" title="Volume">
   <button class="player-btn play-pause" id="playBtn" onclick="togglePlay()">▶</button>
@@ -971,6 +972,7 @@
 <script>
 // ── MINI PLAYER ──────────────────────────────
 const tracks = [
+  { file: 'audio/signature.mp3',    name: 'Hongdae Radio',          sub: 'Official Signature' },
   { file: 'audio/loop-cafe.mp3',    name: 'Hongdae Coffee Shop',    sub: 'Afternoon at Hongdae Cafe' },
   { file: 'audio/loop-reading.mp3', name: 'Sanctuary in Sunlight',  sub: 'Quiet Stacks — The Reading Room' },
   { file: 'audio/loop-beach.mp3',   name: 'Golden Hour Keepsake',   sub: 'Haeundae Beach' },
@@ -1009,6 +1011,16 @@ function changeTrack(idx) {
 }
 
 function setVol(v) { audio.volume = v; }
+
+// 트랙 종료 시 자동으로 다음 트랙 재생 (Signature → Cafe → Reading → Beach → Signature 순환)
+audio.addEventListener('ended', function() {
+  var next = (currentTrack + 1) % tracks.length;
+  loadTrack(next);
+  audio.play();
+  isPlaying = true;
+  document.getElementById('playBtn').textContent = '⏸';
+  document.getElementById('playerEq').classList.remove('paused');
+});
 
 loadTrack(0);
 // ─────────────────────────────────────────────
