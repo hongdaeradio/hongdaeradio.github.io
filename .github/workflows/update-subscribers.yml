@@ -15,23 +15,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch subscriber count from YouTube API
-        id: fetch
+      - name: Run landing page update script
         env:
           YT_API_KEY: AIzaSyB7cKO1_y88hed-u0Xkfak6Vno9RxEkAew
           YT_CHANNEL_ID: UCUgpNaLu2IC4VtgJh5BAlaQ
-        run: |
-          RESPONSE=$(curl -s "https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${YT_CHANNEL_ID}&key=${YT_API_KEY}")
-          COUNT=$(echo "$RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin)['items'][0]['statistics']['subscriberCount'])")
-          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
-          echo "Subscriber count: $COUNT"
-
-      - name: Update index.html
-        run: |
-          TODAY=$(TZ=Asia/Seoul date +"%Y년 %m월 %d일")
-          COUNT=${{ steps.fetch.outputs.count }}
-          sed -i "s|🎧 .*구독자 수 : .*명+|🎧 ${TODAY} 구독자 수 : ${COUNT}명+|" index.html
-          echo "Updated to: 🎧 ${TODAY} 구독자 수 : ${COUNT}명+"
+        run: python3 .github/scripts/update-landing.py
 
       - name: Commit and push if changed
         run: |
@@ -39,5 +27,5 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git diff --quiet && echo "No changes" && exit 0
           git add index.html
-          git commit -m "chore: update subscriber count to ${{ steps.fetch.outputs.count }}"
+          git commit -m "chore: auto-update landing (subscribers + views + latest videos)"
           git push
