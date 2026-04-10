@@ -118,7 +118,44 @@ if match:
         flags=re.DOTALL
     )
 
-# 8. 저장
+# 8. 플레이리스트 자동 갱신 (ALL_PLAYLISTS 배열)
+FULL_COLLECTION_ID = 'PLBIn_rMVsvR7G7UydGECeXJuFC2YFagUI'
+playlists = api_get(f'https://www.googleapis.com/youtube/v3/playlists?key={API_KEY}&channelId={CHANNEL_ID}&part=snippet&maxResults=50')
+
+pl_entries = []
+for item in playlists['items']:
+    pid = item['id']
+    if pid == FULL_COLLECTION_ID:
+        continue  # Full Collection은 고정 카드로 별도 표시
+    title = item['snippet']['title']
+    desc = item['snippet'].get('description', '').split('\n')[0][:40]
+    # 이모지 추출 (타이틀 맨 앞) — 국기 이모지 등 포함
+    emoji_match = re.match(r'^((?:[\U0001f1e0-\U0001f1ff]{2}|[\U0001f300-\U0001f9ff\u2600-\u27bf\ufe0f\u200d])+)\s*', title)
+    emoji = emoji_match.group(1) if emoji_match else '🎵'
+    name = title[len(emoji_match.group(0)):].strip() if emoji_match else title
+    url = f'https://www.youtube.com/playlist?list={pid}'
+    pl_entries.append({'emoji': emoji, 'name': name, 'desc': desc, 'url': url})
+
+# ALL_PLAYLISTS JS 배열 교체
+if pl_entries:
+    js_items = []
+    for p in pl_entries:
+        # JS 문자열 이스케이프
+        name_js = p['name'].replace("'", "\\'")
+        desc_js = p['desc'].replace("'", "\\'")
+        js_items.append(
+            f"  {{ emoji: \"{p['emoji']}\", name: \"{name_js}\", desc: \"{desc_js}\", url: \"{p['url']}\" }}"
+        )
+    new_array = 'const ALL_PLAYLISTS = [\n' + ',\n'.join(js_items) + ',\n];'
+    html = re.sub(
+        r'const ALL_PLAYLISTS = \[.*?\];',
+        new_array,
+        html,
+        flags=re.DOTALL
+    )
+    print(f'  Playlists updated: {len(pl_entries)} items (excl. Full Collection)')
+
+# 9. 저장
 with open('index.html', 'w', encoding='utf-8') as f:
     f.write(html)
 
