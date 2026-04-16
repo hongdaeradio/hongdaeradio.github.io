@@ -825,6 +825,7 @@
       <option value="1">☕ Cafe</option>
       <option value="2">📖 Reading</option>
       <option value="3">🌊 Beach</option>
+      <option value="4">🌧 Rainy</option>
     </select>
     <div id="trackTimer" style="font-family:'Courier New',monospace;font-size:11px;font-weight:bold;color:#0e0c0a;letter-spacing:1px;">--:--</div>
   </div>
@@ -967,6 +968,7 @@ const tracks = [
   { file: 'audio/loop-cafe-v2.mp3',    name: 'Hongdae Coffee Shop',    sub: 'Afternoon at Hongdae Cafe' },
   { file: 'audio/loop-reading-v2.mp3', name: 'Sanctuary in Sunlight',  sub: 'Quiet Stacks — The Reading Room' },
   { file: 'audio/loop-beach-v2.mp3',   name: 'Golden Hour Keepsake',   sub: 'Haeundae Beach' },
+  { file: 'audio/loop-rainy.mp3',      name: 'Rainy Seoul Night',      sub: 'Piano & Rain for Deep Sleep' },
 ];
 let audio = new Audio();
 audio.loop = true;
@@ -1019,7 +1021,7 @@ audio.addEventListener('timeupdate', updateTimer);
 audio.addEventListener('loadedmetadata', updateTimer);
 audio.addEventListener('ended', function() { document.getElementById('trackTimer').textContent = '00:00'; });
 
-// 트랙 종료 시 자동으로 다음 트랙 재생 (Signature → Cafe → Reading → Beach → Signature 순환)
+// 트랙 종료 시 자동으로 다음 트랙 재생 (Signature → Cafe → Reading → Beach → Rainy → Signature 순환)
 audio.addEventListener('ended', function() {
   var next = (currentTrack + 1) % tracks.length;
   loadTrack(next);
