@@ -24,23 +24,36 @@ stats = ch['items'][0]['statistics']
 subscriber_count = stats['subscriberCount']
 total_views = stats['viewCount']
 
-# 2. 최신 영상 3개 조회
-search = api_get(f'https://www.googleapis.com/youtube/v3/search?key={API_KEY}&channelId={CHANNEL_ID}&part=snippet&order=date&maxResults=3&type=video')
-video_ids = [item['id']['videoId'] for item in search['items']]
-video_snippets = {item['id']['videoId']: item['snippet'] for item in search['items']}
+# 2. 최신 영상 3개 조회 (Ambient Music by Hongdae Radio 재생목록 기준)
+# → Shorts 자동 제외 (대장님 원칙: Shorts는 별도 재생목록만 이용)
+AMBIENT_PLAYLIST_ID = 'PLBIn_rMVsvR7G7UydGECeXJuFC2YFagUI'
+pl_items = api_get(
+    f'https://www.googleapis.com/youtube/v3/playlistItems?'
+    f'key={API_KEY}&playlistId={AMBIENT_PLAYLIST_ID}&part=snippet&maxResults=3'
+)
+video_ids = [item['snippet']['resourceId']['videoId'] for item in pl_items['items']]
+video_snippets = {
+    item['snippet']['resourceId']['videoId']: item['snippet']
+    for item in pl_items['items']
+}
 
-# 3. 영상별 조회수 조회
+# 3. 영상별 조회수 · 길이 · 정확한 공개일 조회
+# (playlistItems.publishedAt은 '재생목록 추가일'이므로
+#  videos.snippet.publishedAt을 사용하여 대체)
 ids_str = ','.join(video_ids)
-vid_stats = api_get(f'https://www.googleapis.com/youtube/v3/videos?key={API_KEY}&id={ids_str}&part=statistics,contentDetails')
+vid_stats = api_get(f'https://www.googleapis.com/youtube/v3/videos?key={API_KEY}&id={ids_str}&part=snippet,statistics,contentDetails')
 video_views = {}
 video_durations = {}
 for item in vid_stats['items']:
-    video_views[item['id']] = int(item['statistics']['viewCount'])
+    vid = item['id']
+    video_views[vid] = int(item['statistics']['viewCount'])
     # ISO 8601 duration → minutes
     dur = item['contentDetails']['duration']  # PT1H28M30S
     hours = int(re.search(r'(\d+)H', dur).group(1)) if 'H' in dur else 0
     mins = int(re.search(r'(\d+)M', dur).group(1)) if 'M' in dur else 0
-    video_durations[item['id']] = hours * 60 + mins
+    video_durations[vid] = hours * 60 + mins
+    # 실제 공개일로 스니펫 덮어쓰기 (재생목록 추가일→영상 공개일)
+    video_snippets[vid]['publishedAt'] = item['snippet']['publishedAt']
 
 # 4. index.html 읽기
 with open('index.html', 'r', encoding='utf-8') as f:
